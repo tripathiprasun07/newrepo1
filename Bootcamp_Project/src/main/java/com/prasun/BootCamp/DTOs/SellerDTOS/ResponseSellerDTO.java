@@ -6,14 +6,22 @@ public class ResponseSellerDTO {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String companyContact;
     private String companyName;
+    private String gst;
 
-    public String getCompanyName() {
-        return companyName;
+    public ResponseSellerDTO(Long id, String email, String firstName, String middleName, String lastName, String companyContact, String companyName, String gst) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.companyContact = companyContact;
+        this.companyName = companyName;
+        this.gst = gst;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public ResponseSellerDTO() {
     }
 
     public String getCompanyContact() {
@@ -24,16 +32,20 @@ public class ResponseSellerDTO {
         this.companyContact = companyContact;
     }
 
-    private  String companyContact;
-    public ResponseSellerDTO(Long id, String email, String firstName, String middleName, String lastName) {
-        this.id = id;
-        this.email = email;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public ResponseSellerDTO() {
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getGst() {
+        return gst;
+    }
+
+    public void setGst(String gst) {
+        this.gst = gst;
     }
 
     public Long getId() {

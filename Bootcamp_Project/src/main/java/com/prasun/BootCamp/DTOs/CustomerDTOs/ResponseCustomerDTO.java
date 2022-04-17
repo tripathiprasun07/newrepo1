@@ -7,16 +7,15 @@ public class ResponseCustomerDTO {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String contact;
 
-    public ResponseCustomerDTO(Long id, String email, String firstName, String middleName, String lastName) {
+    public ResponseCustomerDTO(Long id, String email, String firstName, String middleName, String lastName, String contact) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
-    }
-
-    public ResponseCustomerDTO() {
+        this.contact = contact;
     }
 
     public Long getId() {
@@ -57,5 +56,16 @@ public class ResponseCustomerDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public ResponseCustomerDTO() {
     }
 }

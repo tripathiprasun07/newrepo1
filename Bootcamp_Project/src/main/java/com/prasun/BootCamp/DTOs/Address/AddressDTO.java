@@ -1,43 +1,25 @@
-package com.prasun.BootCamp.Model;
+package com.prasun.BootCamp.DTOs.Address;
 
+import javax.validation.constraints.NotBlank;
 
-import javax.persistence.*;
-import java.io.Serializable;
-
-@Entity
-public class Address implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-
+public class AddressDTO {
+    @NotBlank(message = "Enter City")
     private String city;
+    @NotBlank(message = "Enter State")
     private String state;
+    @NotBlank(message = "Enter Country")
     private String country;
+    @NotBlank(message = "Enter Address")
     private String addressLine;
+    @NotBlank(message = "Enter Zip Code")
     private String zipCode;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public AddressDTO(String city, String state, String country, String addressLine, String zipCode) {
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.addressLine = addressLine;
+        this.zipCode = zipCode;
     }
 
     public String getCity() {

@@ -12,7 +12,7 @@ public class Seller extends Auditable<String> {
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "user_id")
-    private ApplicationUser user;
+    private User user;
 
     @Column(unique = true)
     @NotBlank(message = "Enter Your GST")
@@ -33,11 +33,11 @@ public class Seller extends Auditable<String> {
         this.id = id;
     }
 
-    public ApplicationUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(ApplicationUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

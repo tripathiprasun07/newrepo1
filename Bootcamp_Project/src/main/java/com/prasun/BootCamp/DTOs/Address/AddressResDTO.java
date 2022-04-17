@@ -1,28 +1,24 @@
-package com.prasun.BootCamp.Model;
+package com.prasun.BootCamp.DTOs.Address;
 
 
-import javax.persistence.*;
-import java.io.Serializable;
-
-@Entity
-public class Address implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AddressResDTO {
     private long id;
-
-
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-
     private String city;
     private String state;
     private String country;
     private String addressLine;
     private String zipCode;
+
+
+    public AddressResDTO(long id, String city, String state, String country, String addressLine, String zipCode) {
+        this.id = id;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.addressLine = addressLine;
+        this.zipCode = zipCode;
+
+    }
 
     public long getId() {
         return id;
@@ -30,14 +26,6 @@ public class Address implements Serializable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getCity() {
@@ -79,4 +67,6 @@ public class Address implements Serializable {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
+
+
 }

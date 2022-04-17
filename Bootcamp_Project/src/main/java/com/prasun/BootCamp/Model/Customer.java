@@ -13,7 +13,7 @@ public class Customer extends Auditable<String>{
     @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "user_id")
-    private ApplicationUser user;
+    private User user;
 
     @NotBlank(message = "Enter Your Contact")
     String contact;
@@ -26,7 +26,7 @@ public class Customer extends Auditable<String>{
         this.id = id;
     }
 
-    public void setUser(ApplicationUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -38,7 +38,7 @@ public class Customer extends Auditable<String>{
         this.contact = contact;
     }
 
-    public ApplicationUser getUser() {
+    public User getUser() {
         return user;
     }
 

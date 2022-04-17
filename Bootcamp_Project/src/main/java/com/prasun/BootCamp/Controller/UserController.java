@@ -1,8 +1,6 @@
 package com.prasun.BootCamp.Controller;
 
 import com.prasun.BootCamp.DTOs.ResponseUserDTO;
-import com.prasun.BootCamp.DTOs.SellerDTOS.ResponseSellerDTO;
-import com.prasun.BootCamp.DTOs.ResponseUserDTO;
 import com.prasun.BootCamp.security.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.prasun.BootCamp.Model.ApplicationUser;
+import com.prasun.BootCamp.Model.User;
 import com.prasun.BootCamp.repo.UserRepo;
 
 import javax.validation.Valid;
@@ -34,7 +32,7 @@ public class UserController {
 
 	@GetMapping("/user/{user}")
 	public ResponseUserDTO getUser(@PathVariable String user) {
-		ApplicationUser userFound = userRepo.findByEmail(user);
+		User userFound = userRepo.findByEmail(user);
 		ResponseUserDTO dto=new ResponseUserDTO();
 		dto.setEmail(userFound.getEmail());
 		dto.setFirstName(userFound.getFirstName());
@@ -48,14 +46,14 @@ public class UserController {
 	@PostMapping("/registerUser")
 
 
-	public ResponseEntity<ApplicationUser> createUser(@Valid @RequestBody ApplicationUser user){
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user){
 
 		user.setPassword(encoder.encode(user.getPassword()));
 
 
-		ApplicationUser userc=userRepo.save(user);
+		User userc=userRepo.save(user);
 
-		return new ResponseEntity<ApplicationUser>(userc, HttpStatus.CREATED);
+		return new ResponseEntity<User>(userc, HttpStatus.CREATED);
 
 	}
 
@@ -63,9 +61,9 @@ public class UserController {
 	@RequestMapping("/current/user")
 	public ResponseUserDTO getCurrentUser() {
 		System.out.println(SecurityContextHolder.getContext().getAuthentication());
-		ApplicationUser user =  (ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		ApplicationUser userFound = userRepo.findByEmail(user.getEmail());
+		User userFound = userRepo.findByEmail(user.getEmail());
 		ResponseUserDTO dto=new ResponseUserDTO();
 		dto.setId(userFound.getId());
 		dto.setEmail(userFound.getEmail());

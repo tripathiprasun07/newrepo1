@@ -4,7 +4,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.prasun.BootCamp.Enums.Role_Enum;
 import org.springframework.security.core.GrantedAuthority;
 
 
@@ -26,7 +25,7 @@ public class Role implements GrantedAuthority{
 
 	private String name;
      @ManyToMany(mappedBy = "roles")
-	private Set<ApplicationUser> users;
+	private Set<User> users;
 
 	public long getId() {
 		return id;

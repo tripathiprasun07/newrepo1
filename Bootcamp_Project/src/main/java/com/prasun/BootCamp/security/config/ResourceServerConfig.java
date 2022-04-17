@@ -22,32 +22,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
- //       http.authorizeRequests()
-//                .mvcMatchers(HttpMethod.GET,"/","/user/**","/current/user")
-//                .hasAnyRole("USER","ADMIN","CUSTOMER")
-//                .mvcMatchers(HttpMethod.POST,"/login","/registerUser","/register/customer","/register/seller")
-//                .hasAnyRole("USER","ADMIN")
-//                .mvcMatchers(HttpMethod.GET,"/customer/profile")
-//                .hasAnyRole("CUSTOMER")
-//                .anyRequest()
-//                .denyAll()
-//                .and()
-//                .csrf()
-//                .disable();
 
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET,"/","/user/**","/current/user")
+                .mvcMatchers(HttpMethod.GET,"/","/user/**")
                 .hasAnyRole("ADMIN","CUSTOMER","SELLER")
-                .mvcMatchers(HttpMethod.POST,"/registerUser","/customer/register","/register/seller","/customer/address")
-                .hasAnyRole("ADMIN","CUSTOMER")
+                .mvcMatchers("/customer/register","/seller/register")
+                .permitAll()
                 .mvcMatchers("/customer/**")
                 .hasAnyRole("CUSTOMER")
                 .mvcMatchers("/seller/**")
-                .hasAnyRole("SELLER","ADMIN")
+                .hasAnyRole("SELLER")
                 .mvcMatchers("/admin/**")
                 .hasAnyRole("ADMIN")
                 .anyRequest()
-                .denyAll()
+                .permitAll()
                 .and()
                 .csrf()
                 .disable();

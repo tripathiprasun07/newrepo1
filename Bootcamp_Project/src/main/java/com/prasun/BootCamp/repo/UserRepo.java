@@ -6,15 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.prasun.BootCamp.Model.ApplicationUser;
+import com.prasun.BootCamp.Model.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepo extends JpaRepository<ApplicationUser, Integer> {
-     ApplicationUser findByEmail(String email);
-    Optional<ApplicationUser> findById(Long id);
+public interface UserRepo extends JpaRepository<User, Integer> {
+     User findByEmail(String email);
+    Optional<User> findById(Long id);
     @Modifying
     @Query(value = "update user u set u.is_active=TRUE where u.id=?1",nativeQuery = true)
     @Transactional

@@ -1,7 +1,7 @@
 package com.prasun.BootCamp.events;
 
 import com.prasun.BootCamp.Enums.Role_Enum;
-import com.prasun.BootCamp.Model.ApplicationUser;
+import com.prasun.BootCamp.Model.User;
 import com.prasun.BootCamp.Model.Role;
 import com.prasun.BootCamp.repo.RoleRepo;
 import com.prasun.BootCamp.repo.UserRepo;
@@ -28,7 +28,7 @@ public class Bootstrap implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if(Objects.isNull(userRepo.findByEmail("admin@ttn.com"))) {
+        if(Objects.isNull(userRepo.findByRole("admin@ttn.com"))) {
             Role role = new Role();
             role.setName(String.valueOf(Role_Enum.ROLE_ADMIN));
             Role role1 = new Role();
@@ -40,7 +40,7 @@ public class Bootstrap implements ApplicationRunner {
             roleRepo.save(role1);
             roleRepo.save(role2);
 
-            ApplicationUser user = new ApplicationUser();
+            User user = new User();
             user.setEmail("admin@ttn.com");
             user.setFirstName("Prasun");
             user.setMiddleName("Raj");

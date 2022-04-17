@@ -1,19 +1,31 @@
 package com.prasun.BootCamp.Controller;
 
+import com.prasun.BootCamp.DTOs.Category.CategoryDTO;
+import com.prasun.BootCamp.DTOs.Category.CategoryFieldValueResDTO;
+import com.prasun.BootCamp.DTOs.Category.CategoryMetadataFieldDTO;
+import com.prasun.BootCamp.DTOs.Category.CategoryMetadataFieldValueDTO;
 import com.prasun.BootCamp.DTOs.CustomerDTOs.ResponseCustomerDTO;
 import com.prasun.BootCamp.DTOs.SellerDTOS.ResponseSellerDTO;
-import com.prasun.BootCamp.Model.ApplicationUser;
+import com.prasun.BootCamp.Model.User;
+import com.prasun.BootCamp.Model.Category.Category;
+import com.prasun.BootCamp.Model.Category.CategoryMetadataField;
 import com.prasun.BootCamp.Model.Customer;
 import com.prasun.BootCamp.Model.Seller;
+import com.prasun.BootCamp.Service.CategoryService;
+import com.prasun.BootCamp.repo.CategoryRepo.CategoryMetadataFieldRepo;
+import com.prasun.BootCamp.repo.CategoryRepo.CategoryRepo;
 import com.prasun.BootCamp.repo.CustomerRepo;
 import com.prasun.BootCamp.repo.SellerRepo;
 import com.prasun.BootCamp.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -25,6 +37,15 @@ public class AdminController {
 
 @Autowired
     CustomerRepo customerRepo;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    CategoryRepo categoryRepo;
+
+    @Autowired
+    CategoryMetadataFieldRepo categoryMetadataFieldRepo;
 
     @GetMapping("/get/sellers")
     public List<ResponseSellerDTO> getSellers(){
@@ -40,7 +61,7 @@ public class AdminController {
 
             ResponseSellerDTO sellerres = new ResponseSellerDTO();
 
-            ApplicationUser user = userRepo.findById(seller.getId()).orElse(null);
+            User user = userRepo.findById(seller.getId()).orElse(null);
 
 
             sellerres.setEmail(user.getEmail());
@@ -78,7 +99,7 @@ public class AdminController {
 
             ResponseCustomerDTO customerres = new ResponseCustomerDTO();
 
-            ApplicationUser user = userRepo.findById(customer.getId()).orElse(null);
+            User user = userRepo.findById(customer.getId()).orElse(null);
 
 
             customerres.setEmail(user.getEmail());
@@ -110,7 +131,7 @@ public class AdminController {
 
 
 
-        ApplicationUser user = userRepo.findById(customer.getId()).orElse(null);
+        User user = userRepo.findById(customer.getId()).orElse(null);
         userRepo.setActive(user.getId());
 
 
@@ -126,7 +147,7 @@ public class AdminController {
 
 
 
-        ApplicationUser user = userRepo.findById(customer.getId()).orElse(null);
+        User user = userRepo.findById(customer.getId()).orElse(null);
 
         userRepo.setUnActive(user.getId());
 
@@ -144,7 +165,7 @@ public class AdminController {
 
 
 
-        ApplicationUser user = userRepo.findById(seller.getId()).orElse(null);
+        User user = userRepo.findById(seller.getId()).orElse(null);
 
         userRepo.setActive(user.getId());
 
@@ -162,7 +183,7 @@ public class AdminController {
 
 
 
-        ApplicationUser user = userRepo.findById(seller.getId()).orElse(null);
+        User user = userRepo.findById(seller.getId()).orElse(null);
 
 
         userRepo.setUnActive(user.getId());
@@ -172,5 +193,41 @@ public class AdminController {
         return "User deactivated " + user.getUsername() + " " + user.getId();
 
     }
+
+
+    @PostMapping("/category/add")
+    public Category addCategory(@Valid @RequestBody CategoryDTO categoryDTO){
+        if(categoryDTO.getParentId()==0)
+            return categoryService.addCategory(categoryDTO.getName());
+        else{
+            return categoryService.addCategory(categoryDTO.getName(),categoryDTO.getParentId());
+        }
+    }
+
+    @PostMapping("/metadata/add")
+    public CategoryMetadataField addField(@Valid @RequestBody CategoryMetadataFieldDTO categoryMetadataFieldDTO){
+        return categoryService.addField(categoryMetadataFieldDTO.getName());
+    }
+
+    @GetMapping("/metadata/view")
+    public List<CategoryMetadataField> getFieldList(){
+        return categoryMetadataFieldRepo.findAll(Sort.by("id"));
+    }
+
+
+    @GetMapping("/category/view")
+    public List<Category> getCategoryList() {
+        return categoryRepo.findAll(Sort.by("id"));
+    }
+
+    @GetMapping("/category/{id}")
+    public Map<String,List<Category>> getCategoryById(@PathVariable long id) {
+        return categoryService.viewCategoryById(id);
+    }
+
+
+
+
+
 
 }

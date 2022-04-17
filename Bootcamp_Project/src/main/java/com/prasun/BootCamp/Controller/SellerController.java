@@ -1,11 +1,12 @@
 package com.prasun.BootCamp.Controller;
 
-import com.prasun.BootCamp.DTOs.AddressDTO;
+import com.prasun.BootCamp.DTOs.Address.AddressResDTO;
 import com.prasun.BootCamp.DTOs.PasswordDTO;
 import com.prasun.BootCamp.DTOs.SellerDTOS.RequestSellerDTO;
 import com.prasun.BootCamp.DTOs.SellerDTOS.ResponseSellerDTO;
+import com.prasun.BootCamp.ExceptionHandler.CustomerAlreadyExist;
 import com.prasun.BootCamp.Model.Address;
-import com.prasun.BootCamp.Model.ApplicationUser;
+import com.prasun.BootCamp.Model.User;
 import com.prasun.BootCamp.Model.Seller;
 import com.prasun.BootCamp.repo.AddressRepo;
 import com.prasun.BootCamp.repo.RoleRepo;
@@ -46,7 +47,7 @@ public class SellerController {
         seller.setCompanyContact(sellerDTO.getCompanyContact());
         seller.setCompanyName(sellerDTO.getCompanyName());
 
-        ApplicationUser user = new ApplicationUser();
+        User user = new User();
         user.setEmail(sellerDTO.getEmail());
         user.setFirstName(sellerDTO.getFirstName());
         user.setMiddleName(sellerDTO.getMiddleName());
@@ -68,15 +69,15 @@ public class SellerController {
         addressRepo.save(address);
         userRepo.save(user);
 
-        ResponseSellerDTO sellerResDTO = new ResponseSellerDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getMiddleName(), user.getLastName());
+        ResponseSellerDTO sellerResDTO = new ResponseSellerDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getMiddleName(), user.getLastName(),seller.getCompanyContact(),seller.getCompanyName(),seller.getGst());
 
         return new ResponseEntity<ResponseSellerDTO>(sellerResDTO, HttpStatus.CREATED);
     }
 
 @PutMapping("/password")
 public String  updatePassword(@RequestBody PasswordDTO passwordDTO){
-    ApplicationUser user =  (ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    ApplicationUser userFound = userRepo.findByEmail(user.getEmail());
+    User user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    User userFound = userRepo.findByEmail(user.getEmail());
     if(!passwordDTO.getPassword().equals(passwordDTO.getConfirmPassword())){
         return "Password and confirm pasword doesnot match";
     }else{
@@ -87,41 +88,58 @@ public String  updatePassword(@RequestBody PasswordDTO passwordDTO){
 }
 
     @GetMapping("/address/view")
-    public ResponseEntity<AddressDTO> viewAddress(){
-        ApplicationUser user =  (ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<AddressResDTO> viewAddress(){
+        User user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Address address = user.getAddress();
-        AddressDTO addressDTO = new AddressDTO(address.getCity(),address.getState(),address.getCountry(),address.getAddressLine(), address.getZipCode());
-        return new ResponseEntity<AddressDTO>(addressDTO,HttpStatus.FOUND);
+        AddressResDTO addressDTO = new AddressResDTO(address.getId(),address.getCity(),address.getState(),address.getCountry(),address.getAddressLine(), address.getZipCode());
+        return new ResponseEntity<AddressResDTO>(addressDTO,HttpStatus.FOUND);
     }
     @PatchMapping("/address/update/{id}")
-    public String updateAddress(@PathVariable long id , @RequestBody Map<Object, Object> map) {
+    public AddressResDTO updateAddress(@PathVariable long id , @RequestBody Map<Object, Object> map) {
         Address address = addressRepo.findById(id).orElse(null);
-
         map.forEach((k, v) -> {
             Field field = org.springframework.util.ReflectionUtils.findField(Address.class,(String)k);
             if(field.getName()=="id" || field.getName()=="user_id") {
                 return;
             }
             field.setAccessible(true);
-            System.out.println(">>>>>>"+field);
+            System.out.println(field);
             ReflectionUtils.setField(field, address, v);
         });
         addressRepo.save(address);
         Address address1 = addressRepo.getOne(address.getId());
-
-        return "Changed SUccessfully";
+        AddressResDTO addressResDTO = new AddressResDTO(address1.getId(),address1.getCity(),address1.getState(),address1.getCountry(),address1.getAddressLine(),address1.getZipCode());
+        return addressResDTO;
     }
 
 
 
+    @PatchMapping("/profile/update")
+    public ResponseSellerDTO editProfile( @RequestBody Map<Object, Object> map) {
+        User user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //UserEntity user = userRepo.findByEmail(email);
+        map.forEach((k, v) -> {
+            Field field = org.springframework.util.ReflectionUtils.findField(User.class,(String)k);
+            if(field.getName()=="email" || field.getName()=="password" ||field.getName()=="id") {
+                return;
+            }
+            field.setAccessible(true);
+            System.out.println(field);
+            ReflectionUtils.setField(field, user, v);
+        });
+        try{
+            userRepo.save(user);
+        }catch (Exception ex){
+           throw new CustomerAlreadyExist("Bad Request");
+        }
+
+        Seller seller = sellerRepo.getOne(user.getId());
+        ResponseSellerDTO sellerResDTO = new ResponseSellerDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getMiddleName(), user.getLastName(),seller.getCompanyContact(),seller.getCompanyName(),seller.getGst());
+        return sellerResDTO;
+    }
 
 
 
-//    @PutMapping("/address")
-//    public String  updatePassword(@Valid @RequestBody RequestSellerDTO sellerDTO){
-//
-//    return "successfull";
-//    }
 
 
 

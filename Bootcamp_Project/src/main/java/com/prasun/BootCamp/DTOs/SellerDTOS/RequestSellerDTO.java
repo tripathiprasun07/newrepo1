@@ -1,6 +1,6 @@
 package com.prasun.BootCamp.DTOs.SellerDTOS;
 
-import com.prasun.BootCamp.DTOs.AddressDTO;
+import com.prasun.BootCamp.DTOs.Address.AddressDTO;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
@@ -22,8 +22,7 @@ public class RequestSellerDTO {
     private String lastName;
     @Size(min = 6,max = 12,message = "Password must be at least 6 characters")
     private String password;
-    @Size(min = 6,max = 12,message = "Password must be at least 6 characters")
-    private String rpassword;
+
     @Column(unique=true)
     @NotBlank(message = "Enter GST")
     private String gst;
@@ -92,13 +91,8 @@ public class RequestSellerDTO {
         this.password = password;
     }
 
-    public String getRpassword() {
-        return rpassword;
-    }
+;
 
-    public void setRpassword(String rpassword) {
-        this.rpassword = rpassword;
-    }
 
     public String getGst() {
         return gst;
@@ -123,4 +117,6 @@ public class RequestSellerDTO {
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
+
+
 }
