@@ -28,7 +28,7 @@ public class Bootstrap implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if(Objects.isNull(userRepo.findByRole("admin@ttn.com"))) {
+        if(Objects.isNull(userRepo.findByEmail("admin@ttn.com"))) {
             Role role = new Role();
             role.setName(String.valueOf(Role_Enum.ROLE_ADMIN));
             Role role1 = new Role();

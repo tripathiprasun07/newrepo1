@@ -1,33 +1,59 @@
 package com.prasun.BootCamp.Model.Category;
 
+import com.prasun.BootCamp.Model.Auditable;
+import com.prasun.BootCamp.Model.Category.CategoryMetadataFieldValues;
+import com.prasun.BootCamp.Model.Product.Product;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
 import java.util.Set;
-
 @Entity
-public class Category {
+@EnableJpaAuditing
+public class Category extends Auditable<String> {
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(unique=true)
-    @NotBlank(message = "Enter Your Category name")
-    private String  name;
-    private long parentId;
+    private Long id;
+
+    private String name;
 
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
-    private Set<CategoryMetadataFieldValues> categoryMetadataFieldValueSet = new HashSet<>();
+    private Long parentCategoryId;
 
 
+    @OneToMany(mappedBy = "category")
+    Set<CategoryMetadataFieldValues> categoryMetadataFieldValues;
 
 
-    public long getId() {
+    @OneToMany(mappedBy = "categoryId")
+    private Set<Product> product;
+
+    public Set<CategoryMetadataFieldValues> getCategoryMetadataFieldValues() {
+        return categoryMetadataFieldValues;
+    }
+
+    public void setCategoryMetadataFieldValues(Set<CategoryMetadataFieldValues> categoryMetadataFieldValues) {
+        this.categoryMetadataFieldValues = categoryMetadataFieldValues;
+    }
+
+    public Set<Product> getProduct() {
+        return product;
+    }
+
+    public void setProduct(Set<Product> product) {
+        this.product = product;
+    }
+
+    public Category() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,12 +65,11 @@ public class Category {
         this.name = name;
     }
 
-    public long getParentId() {
-        return parentId;
+    public Long getParentCategoryId() {
+        return parentCategoryId;
     }
 
-    public void setParentId(long parentId) {
-        this.parentId = parentId;
+    public void setParentCategoryId(Long parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
     }
-
 }

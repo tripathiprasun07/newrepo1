@@ -13,17 +13,18 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
-     User findByEmail(String email);
+    User findByEmail(String email);
+
     Optional<User> findById(Long id);
+
     @Modifying
-    @Query(value = "update user u set u.is_active=TRUE where u.id=?1",nativeQuery = true)
+    @Query(value = "update user u set u.is_active=TRUE where u.id=?1", nativeQuery = true)
     @Transactional
     void setActive(@Param("id") Long id);
 
 
-
     @Modifying
-    @Query(value = "update user u set u.is_active=FALSE where u.id=?1",nativeQuery = true)
+    @Query(value = "update user u set u.is_active=FALSE where u.id=?1", nativeQuery = true)
     @Transactional
     void setUnActive(@Param("id") Long id);
 }

@@ -24,7 +24,16 @@ public class Role implements GrantedAuthority{
 	}
 
 	private String name;
-     @ManyToMany(mappedBy = "roles")
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	@ManyToMany(mappedBy = "roles")
 	private Set<User> users;
 
 	public long getId() {

@@ -1,7 +1,10 @@
 package com.prasun.BootCamp.Model;
 
+import com.prasun.BootCamp.Model.Product.Product;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Entity
 public class Seller extends Auditable<String> {
@@ -24,6 +27,9 @@ public class Seller extends Auditable<String> {
     private String companyContact;
     @NotBlank(message = "Enter Your Company Name")
     private String companyName;
+
+    @OneToMany(mappedBy = "seller")
+    private Set<Product> products;
 
     public Long getId() {
         return id;

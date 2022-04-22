@@ -5,7 +5,7 @@ import com.prasun.BootCamp.Model.Role;
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,10 +23,10 @@ public class RequestCustomerDTO {
     private String middleName;
     @NotBlank(message = "Enter Last Name")
     private String lastName;
-    @Size(min = 6,max = 12,message = "password must be 6-12 characters")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,15}",message ="8-15 Characters with at least 1 Lower case, 1 Upper case, 1 Special Character, 1 Number" )
     private String password;
-    @Size(min = 6,max = 12,message = "password must be 6-12 characters")
-    private String rpassword;
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,15}",message ="8-15 Characters with at least 1 Lower case, 1 Upper case, 1 Special Character, 1 Number" )
+    private String confrimPassword;
     @Size(min = 10,max = 10,message = "Enter your contact Number")
     private String contact;
     @Size(min = 10,max = 10,message = "Enter your contact Number")
@@ -92,12 +92,12 @@ public class RequestCustomerDTO {
         this.password = password;
     }
 
-    public String getRpassword() {
-        return rpassword;
+    public String getConfrimPassword() {
+        return confrimPassword;
     }
 
-    public void setRpassword(String rpassword) {
-        this.rpassword = rpassword;
+    public void setConfrimPassword(String confrimPassword) {
+        this.confrimPassword = confrimPassword;
     }
 
     public String getContact() {

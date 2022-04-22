@@ -3,10 +3,7 @@ package com.prasun.BootCamp.DTOs.SellerDTOS;
 import com.prasun.BootCamp.DTOs.Address.AddressDTO;
 
 import javax.persistence.Column;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class RequestSellerDTO {
     private Long id;
@@ -20,8 +17,21 @@ public class RequestSellerDTO {
     private String middleName;
     @NotBlank(message = "Enter Last Name")
     private String lastName;
-    @Size(min = 6,max = 12,message = "Password must be at least 6 characters")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,15}",message ="8-15 Characters with at least 1 Lower case, 1 Upper case, 1 Special Character, 1 Number" )
+
     private String password;
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,15}",message ="8-15 Characters with at least 1 Lower case, 1 Upper case, 1 Special Character, 1 Number" )
+
+    private String confirmPassword;
 
     @Column(unique=true)
     @NotBlank(message = "Enter GST")
@@ -32,16 +42,58 @@ public class RequestSellerDTO {
     @NotBlank(message = "Enter Company Name")
     private String companyName;
 
-    @NotNull(message = "Enter Company Address")
-    private AddressDTO addressDTO;
 
-    public AddressDTO getAddressDTO() {
-        return addressDTO;
+    @NotBlank(message = "Enter City")
+    private String city;
+    @NotBlank(message = "Enter State")
+    private String state;
+    @NotBlank(message = "Enter Country")
+    private String country;
+
+    public String getCity() {
+        return city;
     }
 
-    public void setAddressDTO(AddressDTO addressDTO) {
-        this.addressDTO = addressDTO;
+    public void setCity(String city) {
+        this.city = city;
     }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getAddressLine() {
+        return addressLine;
+    }
+
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    @NotBlank(message = "Enter Address")
+    private String addressLine;
+    @NotBlank(message = "Enter Zip Code")
+    private String zipCode;
 
     public Long getId() {
         return id;

@@ -1,6 +1,6 @@
 package com.prasun.BootCamp.Service;
 
-
+import com.prasun.BootCamp.DTOs.Category.CategoryDTO;
 import com.prasun.BootCamp.DTOs.Category.CategoryFieldValueResDTO;
 import com.prasun.BootCamp.ExceptionHandler.ResourceDoesNotExist;
 import com.prasun.BootCamp.ExceptionHandler.ResourceExist;
@@ -47,40 +47,86 @@ public class CategoryServiceImpl implements CategoryService{
             throw new ResourceExist("Category Already Exist With name :- "+name);
         }
     }
-    public Category addCategory(String name, long id){
-        if(categoryRepo.findById(id) == null||categoryRepo.findById(id).getParentId()!=0)
-            throw new ResourceDoesNotExist("Parent Category does not exist with id " +id);
-        if(categoryRepo.findByName(name)==null && categoryRepo.findById(id).getParentId()==0){
+
+
+    public Category addCategory(String name, Long id){
+
+
+        if(categoryRepo.findById(id)==null){
+
+            throw new ResourceExist("Parent Category does not exist with id " +id);
+
+
+
+        }else {
+            if(categoryRepo.findByName(name)!=null){
+
+                throw new ResourceExist("Category Already Exist With name :- "+name);
+
+            }
             Category category = new Category();
             category.setName(name);
-            category.setParentId(id);
+            category.setParentCategoryId(id);
             categoryRepo.save(category);
             return category;
-        }else {
-            throw new ResourceExist("Category Already Exist With name :- "+name);
+
         }
+
+
+
     }
-    public Map<String,List<Category>> viewCategoryById(long id) {
+    public Map<String, List<CategoryDTO>> viewCategoryById(Long id) {
         if(categoryRepo.findById(id)==null)
-            throw new ResourceDoesNotExist("Category does not exist with id " +id);
-        Map<String,List<Category>> map = new HashMap<>();
-        Category category = categoryRepo.findById(id);
-        if(category.getParentId()==0){
-            map.put("Parent Category",Arrays.asList(category));
+            throw new ResourceExist("Category does not exist with id " +id);
+        Map<String,List<CategoryDTO>> map = new HashMap<>();
+        Category category = categoryRepo.findById(id).orElse(null);
+        if(category.getParentCategoryId()==null){
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setName(category.getName());
+            categoryDTO.setParentId(category.getParentCategoryId());
+            map.put("Root Category", Arrays.asList(categoryDTO));
+            return map;
+
         }
-        List<Category> cc = categoryRepo.findAllByParentId(id);
-        map.put("Child Category",cc);
+        List<Category> childCat = categoryRepo.findAllByParentCategoryId(id);
+
+        List<CategoryDTO> responseDTO = new ArrayList<>();
+
+
+        for(Category category1 :childCat){
+
+            CategoryDTO childCategoryDTO = new CategoryDTO();
+            childCategoryDTO.setName(category1.getName());
+            childCategoryDTO.setParentId(category1.getParentCategoryId());
+            responseDTO.add(childCategoryDTO);
+
+
+        }
+
+        map.put("Child Category",responseDTO);
+
+
+        Category parentCategory = categoryRepo.findById(category.getParentCategoryId()).orElse(null);
+        CategoryDTO newCategoryDTO = new CategoryDTO();
+        newCategoryDTO.setName(parentCategory.getName());
+        newCategoryDTO.setParentId(parentCategory.getParentCategoryId());
+
+        List<CategoryDTO> parentCat = new ArrayList<>();
+        parentCat.add(newCategoryDTO);
+
+        map.put("Parent Category",parentCat);
+
         return map;
     }
-    public Category showCategory(long id){
-        Category category = categoryRepo.findById(id);
+    public Category viewCategory(Long id){
+        Category category = categoryRepo.findById(id).orElse(null);
         if(category==null){
             throw new ResourceDoesNotExist("Category does not exist with id " +id);
         }
         return category;
     }
-    public Category updateCategory(long id, String name) {
-        Category category = categoryRepo.findById(id);
+    public Category updateCategory(Long id, String name) {
+        Category category = categoryRepo.findById(id).orElse(null);
         if(categoryRepo.findByName(name)!=null)
             throw new ResourceExist("Category Already Exist With name :- "+name);
         if(category!=null){
@@ -94,7 +140,7 @@ public class CategoryServiceImpl implements CategoryService{
 
 
     @Transactional
-    public CategoryFieldValueResDTO addMetadataValue(long id, long mid, Set<String> value) {
+    public CategoryFieldValueResDTO addMetadataValue(Long id, Long mid, Set<String> value) {
         if(categoryRepo.findById(id)==null){
             throw new ResourceDoesNotExist("Category does not exist with id " +id);
         }
@@ -115,7 +161,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Transactional
-    public CategoryFieldValueResDTO updateMetadataValue(long id, long mid, Set<String> value) {
+    public CategoryFieldValueResDTO updateMetadataValue(Long id, Long mid, Set<String> value) {
         if(categoryRepo.findById(id)==null){
             throw new ResourceDoesNotExist("Category does not exist with id " +id);
         }
